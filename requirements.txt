@@ -1,0 +1,8 @@
+openai
+requests
+geographiclib
+networkx
+prompt_toolkit
+rich
+python-dotenv
+pydantic
