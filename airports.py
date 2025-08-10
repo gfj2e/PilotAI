@@ -1,30 +1,44 @@
 import csv
+import pickle
+import os
 from geographiclib.geodesic import Geodesic
 
 AIRPORTS = {}
+PICKLE_FILE = "airports.pkl"
 
-with open("airports.csv", "r", encoding="utf-8") as file:
-    reader = csv.DictReader(file)
-    for row in reader:
-        AIRPORTS [row["ident"]] = {
-        "type": row["type"],
-        "name": row["name"],
-        "latitude": float(row["latitude_deg"]),
-        "longitude": float(row["longitude_deg"]),
-        "elevation": int(row["elevation_ft"]) if row["elevation_ft"] else 0,
-        "continenent": row["continent"],
-        "iso_country": row["iso_country"],
-        "iso_region": row["iso_region"],
-        "municipality": row["municipality"],
-        "scheduled_service": row["scheduled_service"],
-        "icao_code": row["icao_code"],
-        "iata_code": row["iata_code"],
-        "gps_code": row["gps_code"],
-        "local_code": row["local_code"],
-        "link": row["home_link"],
-        "wikipedia": row["wikipedia_link"],
-        "keywords": row["keywords"]
-    }
+def load_aiports():
+    global AIRPORTS
+    if os.path.exists(PICKLE_FILE):
+        with open(PICKLE_FILE, "rb") as file:
+            AIRPORTS = pickle.load(file)
+        print(f"Loaded {len(AIRPORTS)} airports")
+    else:
+        print("Processing CSV File...")
+        with open("airports.csv", "r", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                AIRPORTS [row["ident"]] = {
+                "type": row["type"],
+                "name": row["name"],
+                "latitude": float(row["latitude_deg"]),
+                "longitude": float(row["longitude_deg"]),
+                "elevation": int(row["elevation_ft"]) if row["elevation_ft"] else 0,
+                "continent": row["continent"],
+                "iso_country": row["iso_country"],
+                "iso_region": row["iso_region"],
+                "municipality": row["municipality"],
+                "scheduled_service": row["scheduled_service"],
+                "icao_code": row["icao_code"],
+                "iata_code": row["iata_code"],
+                "gps_code": row["gps_code"],
+                "local_code": row["local_code"],
+                "link": row["home_link"],
+                "wikipedia": row["wikipedia_link"],
+                "keywords": row["keywords"]
+            }
+        with open(PICKLE_FILE, "wb") as file:
+            pickle.dump(AIRPORTS, file)
+        print(f"Processed and saved {len(AIRPORTS)} airports...")
 
 def calculate_route(airports: list[str]):
     if len(airports) < 2:
@@ -56,4 +70,5 @@ def calculate_route(airports: list[str]):
     }
     
 if __name__ == "__main__":
+    load_aiports()
     print(calculate_route(["KMBT", "KBNA", "KMEM"]))
