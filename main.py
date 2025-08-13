@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from rich.console import Console
 from rich.live import Live
 from rich.text import Text
+from rich.panel import Panel
 import os, time, json
 
 load_dotenv()
@@ -77,6 +78,17 @@ def animate_typing(text, prefix=None, speed=0.01) -> None:
             time.sleep(speed)
     
 def main():
+    
+    welcome = Panel("""[bold blue]✈️ PilotAI[/bold blue] - Your Aviation Assistant
+    [yellow]Commands:[/yellow]
+    • Type [bold cyan]/clear[/bold cyan] to clear conversation history
+    • Type [bold cyan]/save[/bold cyan] to manually save conversation
+    • Type [bold cyan]exit[/bold cyan] to quit""",
+        title="[bold]Welcome to PilotAI",
+        border_style="blue",
+        padding=(1, 2))
+    
+    console.print(welcome, end="\n")
     
     load_history()
     
